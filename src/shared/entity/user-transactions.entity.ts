@@ -2,11 +2,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
+import { Category } from './category.entity';
 import { CategoryEnum } from '../enum/enums';
+import { User } from './user.entity';
 
 @Entity()
 export class UserTransactions {
@@ -33,4 +36,16 @@ export class UserTransactions {
 
   @UpdateDateColumn({ select: false })
   updatedAt: Date;
+
+  @ManyToOne(() => User, (user) => user.transactions, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  user: User;
+
+  @ManyToOne(() => Category, (cat) => cat.transactions, {
+    onDelete: 'NO ACTION',
+    onUpdate: 'NO ACTION',
+  })
+  category: Category;
 }

@@ -5,9 +5,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
+import { Category } from './category.entity';
+import { UserGoals } from './user-goals.entity';
+import { UserTransactions } from './user-transactions.entity';
 
 @Entity()
 export class User {
@@ -47,4 +52,13 @@ export class User {
     const number = Math.floor(Math.random() * 9);
     this.image = `https://randomuser.me/api/portraits/lego/${number}.jpg`;
   }
+
+  @OneToMany(() => UserGoals, (goal) => goal.user)
+  goals: UserGoals;
+
+  @OneToMany(() => Category, (cat) => cat.user)
+  category: Category;
+
+  @OneToMany(() => UserTransactions, (transaction) => transaction.user)
+  transactions: UserTransactions;
 }

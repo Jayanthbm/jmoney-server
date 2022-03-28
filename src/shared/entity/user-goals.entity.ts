@@ -3,9 +3,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
+import { User } from './user.entity';
 
 @Entity()
 export class UserGoals {
@@ -44,4 +47,10 @@ export class UserGoals {
     this.pendingAmount = this.totalAmount - this.savedAmount;
     this.percentageCompleted = (this.savedAmount / this.totalAmount) * 100;
   }
+
+  @ManyToOne(() => User, (user) => user.goals, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  user: User;
 }
