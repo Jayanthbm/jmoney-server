@@ -1,4 +1,5 @@
 import { AppModule } from './app.module';
+import { ErrorFilter } from './error/error.filter';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
@@ -18,7 +19,7 @@ async function bootstrap() {
     credentials: true,
   });
   app.useGlobalPipes(new ValidationPipe());
-
+  app.useGlobalFilters(new ErrorFilter());
   await app.listen(3000);
 }
 bootstrap();
