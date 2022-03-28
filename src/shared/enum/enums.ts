@@ -1,4 +1,4 @@
 export enum CategoryEnum {
-  income = 'inccome',
+  income = 'income',
   expense = 'expense',
 }
