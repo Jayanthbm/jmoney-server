@@ -1,0 +1,16 @@
+{
+  "name": "default",
+  "type": "mysql",
+  "host": "localhost",
+  "port": "3306",
+  "username": "root",
+  "password": "",
+  "database": "jmoney",
+  "synchronize": true,
+  "logging": ["error"],
+  "logger": "file",
+  "charset": "utf8mb4_unicode_ci",
+  "supportBigNumbers": true,
+  "autoLoadEntities": true,
+  "entities": ["dist/shared/entity/*.entity.js"]
+}
