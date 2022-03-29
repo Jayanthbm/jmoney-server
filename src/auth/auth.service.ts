@@ -45,11 +45,9 @@ export class AuthService {
           const token = this.jwtService.sign(payload);
           const categories = await this.getUserCategories(user);
           return {
-            view: {
-              token,
-              type: 'success',
-              message: 'Login Successful',
-            },
+            token,
+            type: 'success',
+            message: 'Login Successful',
             categories,
           };
         }
@@ -75,10 +73,8 @@ export class AuthService {
       user.salt = salt;
       await connection.manager.save(user);
       return {
-        view: {
-          type: 'success',
-          message: 'Registration successful,Please login with your credentials',
-        },
+        type: 'success',
+        message: 'Registration successful,Please login with your credentials',
       };
     } catch (error) {
       throw new BadRequestException(

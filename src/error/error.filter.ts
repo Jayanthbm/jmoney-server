@@ -17,21 +17,17 @@ export class ErrorFilter implements ExceptionFilter {
 
     if (status === HttpStatus.GATEWAY_TIMEOUT) {
       return response.status(status).send({
-        view: {
-          message: 'Server is down, please try again later',
-          type: 'error',
-        },
+        message: 'Server is down, please try again later',
+        type: 'error',
       });
     } else {
       return response.status(status).send({
-        view: {
-          message: exception.response.message
-            ? typeof exception.response.message === 'object'
-              ? exception.response.message[0]
-              : exception.response.message
-            : 'Something went wrong',
-          type: 'error',
-        },
+        message: exception.response.message
+          ? typeof exception.response.message === 'object'
+            ? exception.response.message[0]
+            : exception.response.message
+          : 'Something went wrong',
+        type: 'error',
       });
     }
   }
