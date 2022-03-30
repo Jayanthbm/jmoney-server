@@ -58,10 +58,8 @@ export class MoneyService {
       category.user = user;
       await connection.manager.save(category);
       return {
-        view: {
-          type: 'success',
-          message: 'Category added successfully',
-        },
+        type: 'success',
+        message: 'Category added successfully',
       };
     } catch (error) {
       console.log('Error during adding category ', error);
@@ -71,7 +69,7 @@ export class MoneyService {
   async updateCategory(
     user: User,
     categoryId: number,
-    addCategoryDto: AddCategoryDto,
+    addCategoryDto: AddCategoryDto
   ) {
     try {
       const connection = getConnection('default');
@@ -86,10 +84,8 @@ export class MoneyService {
       category.type = addCategoryDto.type;
       await connection.manager.save(category);
       return {
-        view: {
-          type: 'success',
-          message: 'Category updated successfully',
-        },
+        type: 'success',
+        message: 'Category updated successfully',
       };
     } catch (error) {
       console.log('Error during updating category ', error);
@@ -107,10 +103,8 @@ export class MoneyService {
       }
       await connection.manager.remove(category);
       return {
-        view: {
-          type: 'success',
-          message: 'Category deleted successfully',
-        },
+        type: 'success',
+        message: 'Category deleted successfully',
       };
     } catch (error) {
       console.log('Error during deleting category ', error);
@@ -173,10 +167,8 @@ export class MoneyService {
       // transaction.user = user;
       await connection.manager.save(transaction);
       return {
-        view: {
-          type: 'success',
-          message: 'Transaction added successfully',
-        },
+        type: 'success',
+        message: 'Transaction added successfully',
       };
     } catch (error) {
       console.log('Error during adding transaction ', error);
@@ -186,7 +178,7 @@ export class MoneyService {
   async updateTransaction(
     user: User,
     transactionId: number,
-    addTransactionDto: AddTransactionDto,
+    addTransactionDto: AddTransactionDto
   ) {
     try {
       const connection = getConnection('default');
@@ -214,10 +206,8 @@ export class MoneyService {
       }
       await connection.manager.save(transaction);
       return {
-        view: {
-          type: 'success',
-          message: 'Transaction updated successfully',
-        },
+        type: 'success',
+        message: 'Transaction updated successfully',
       };
     } catch (error) {
       console.log('Error during updating transaction ', error);
@@ -237,10 +227,8 @@ export class MoneyService {
       }
       await connection.manager.remove(transaction);
       return {
-        view: {
-          type: 'success',
-          message: 'Transaction deleted successfully',
-        },
+        type: 'success',
+        message: 'Transaction deleted successfully',
       };
     } catch (error) {
       console.log('Error during deleting transaction ', error);
@@ -253,7 +241,7 @@ export class MoneyService {
       const { search } = userGoalsQuery;
       let { page, pageSize } = userGoalsQuery;
       page = page || 1;
-      pageSize = pageSize || 10;
+      pageSize = pageSize || 40;
       const userGoals = connection
         .getRepository(UserGoals)
         .createQueryBuilder('userGoal')
@@ -283,10 +271,8 @@ export class MoneyService {
       userGoal.user = user;
       await connection.manager.save(userGoal);
       return {
-        view: {
-          type: 'success',
-          message: 'User goal added successfully',
-        },
+        type: 'success',
+        message: 'User goal added successfully',
       };
     } catch (error) {
       console.log('Error during adding user goal ', error);
@@ -296,7 +282,7 @@ export class MoneyService {
   async updateUserGoal(
     user: User,
     userGoalId: number,
-    addUserGoalDto: AddUserGoalDto,
+    addUserGoalDto: AddUserGoalDto
   ) {
     try {
       const connection = getConnection('default');
@@ -313,10 +299,8 @@ export class MoneyService {
       userGoal.savedAmount = addUserGoalDto.savedAmount;
       await connection.manager.save(userGoal);
       return {
-        view: {
-          type: 'success',
-          message: 'User goal updated successfully',
-        },
+        type: 'success',
+        message: 'User goal updated successfully',
       };
     } catch (error) {
       console.log('Error during updating user goal ', error);
@@ -334,10 +318,8 @@ export class MoneyService {
       }
       await connection.manager.remove(userGoal);
       return {
-        view: {
-          type: 'success',
-          message: 'User goal deleted successfully',
-        },
+        type: 'success',
+        message: 'User goal deleted successfully',
       };
     } catch (error) {
       console.log('Error during deleting user goal ', error);
