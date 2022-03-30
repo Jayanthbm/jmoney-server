@@ -6,11 +6,13 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  Index,
 } from 'typeorm';
 
 import { User } from './user.entity';
 
 @Entity()
+@Index(['name', 'totalAmount', 'user'], { unique: true })
 export class UserGoals {
   @PrimaryGeneratedColumn()
   id: number;

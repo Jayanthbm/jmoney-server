@@ -5,6 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  Index,
 } from 'typeorm';
 
 import { Category } from './category.entity';
@@ -12,6 +13,7 @@ import { CategoryEnum } from '../enum/enums';
 import { User } from './user.entity';
 
 @Entity()
+@Index(['name', 'amount', 'date', 'type', 'user'], { unique: true })
 export class UserTransactions {
   @PrimaryGeneratedColumn()
   id: number;
