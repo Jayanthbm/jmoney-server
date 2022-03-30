@@ -13,16 +13,26 @@ import { UserGoalsQueryDto } from './dto/user-goals-query.dto';
 import { UserTransactions } from './../shared/entity/user-transactions.entity';
 import { getConnection } from 'typeorm';
 import { paginate } from 'nestjs-typeorm-paginate';
-
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const moment = require('moment');
 @Injectable()
 export class MoneyService {
   async getDashboard(user: User, dashboardQuery: DashboardQueryDto) {
     try {
-      const availableBalance = this.getAvailableBalance(user);
-      const dailyLimit = this.getDailyLimit(user);
-      const monthsTotalIncome = this.getMonthsTotalIncome(user);
-      const monthsTotalExpense = this.getMonthsTotalExpense(user);
+      const availableBalance = await this.getAvailableBalance(user);
+      const dailyLimit = await this.getDailyLimit(user);
+      const monthsTotalIncome = await this.getMonthsTotalIncome(user);
+      const monthsTotalExpense = await this.getMonthsTotalExpense(user);
+      const month = moment().format('MMMM');
+      const year = moment().format('YYYY');
+      // Start date and End date of the month
+      const startDate = moment().clone().startOf('month').format('DD-MM-YYYY');
+      const endDate = moment().clone().endOf('month').format('DD-MM-YYYY');
       return {
+        month,
+        year,
+        startDate,
+        endDate,
         availableBalance,
         dailyLimit,
         monthsTotalIncome,
@@ -37,9 +47,8 @@ export class MoneyService {
   async getCategories(user: User, categoryQuery: CategoryQueryDto) {
     try {
       const connection = getConnection('default');
-      let query;
       const { search, type } = categoryQuery;
-      query = connection
+      const query = connection
         .getRepository(Category)
         .createQueryBuilder('category')
         .where('category.userId = :userId', { userId: user.id });
@@ -77,7 +86,7 @@ export class MoneyService {
       throw new BadRequestException(
         error.code === 'ER_DUP_ENTRY'
           ? 'Category already exists'
-          : 'Error during adding category'
+          : 'Error during adding category',
       );
     }
   }
@@ -85,7 +94,7 @@ export class MoneyService {
   async updateCategory(
     user: User,
     categoryId: number,
-    addCategoryDto: AddCategoryDto
+    addCategoryDto: AddCategoryDto,
   ) {
     try {
       const connection = getConnection('default');
@@ -108,7 +117,7 @@ export class MoneyService {
       throw new BadRequestException(
         error.code === 'ER_DUP_ENTRY'
           ? 'Category already exists'
-          : 'Error during updating category'
+          : 'Error during updating category',
       );
     }
   }
@@ -198,7 +207,7 @@ export class MoneyService {
       throw new BadRequestException(
         error.code === 'ER_DUP_ENTRY'
           ? 'Transaction already exists'
-          : 'Error during adding transaction'
+          : 'Error during adding transaction',
       );
     }
   }
@@ -206,7 +215,7 @@ export class MoneyService {
   async updateTransaction(
     user: User,
     transactionId: number,
-    addTransactionDto: AddTransactionDto
+    addTransactionDto: AddTransactionDto,
   ) {
     try {
       const connection = getConnection('default');
@@ -242,7 +251,7 @@ export class MoneyService {
       throw new BadRequestException(
         error.code === 'ER_DUP_ENTRY'
           ? 'Transaction already exists'
-          : 'Error during updating transaction'
+          : 'Error during updating transaction',
       );
     }
   }
@@ -314,7 +323,7 @@ export class MoneyService {
       throw new BadRequestException(
         error.code === 'ER_DUP_ENTRY'
           ? 'User Goal already exists'
-          : 'Error during adding user goal'
+          : 'Error during adding user goal',
       );
     }
   }
@@ -322,7 +331,7 @@ export class MoneyService {
   async updateUserGoal(
     user: User,
     userGoalId: number,
-    addUserGoalDto: AddUserGoalDto
+    addUserGoalDto: AddUserGoalDto,
   ) {
     try {
       const connection = getConnection('default');
@@ -347,7 +356,7 @@ export class MoneyService {
       throw new BadRequestException(
         error.code === 'ER_DUP_ENTRY'
           ? 'User Goal already exists'
-          : 'Error during updating user goal'
+          : 'Error during updating user goal',
       );
     }
   }
@@ -375,8 +384,7 @@ export class MoneyService {
   async getAvailableBalance(user: User) {
     try {
       return {
-        total: 0,
-        percentageUsed: 0,
+        total: 6000,
       };
     } catch (error) {
       console.log('Error while fetching Available Balance');
@@ -385,10 +393,9 @@ export class MoneyService {
   async getDailyLimit(user: User) {
     try {
       return {
-        total: 0,
-        spentToday: 0,
-        remaingForTheeDay: 0,
-        percentageUsed: 0,
+        total: 200,
+        spentToday: 50,
+        remaingForTheeDay: 150,
       };
     } catch (error) {
       console.log('Error while fetching Daily Limit');
@@ -397,10 +404,10 @@ export class MoneyService {
   async getMonthsTotalIncome(user: User) {
     try {
       return {
-        total: 0,
-        lastMonthIncome: 0,
-        comparedToLastMonthInMoney: 0,
-        comparedToLastMonthInPercent: 0,
+        total: 50000,
+        lastMonthIncome: 52000,
+        comparedToLastMonthInPercent: (52000 / 50000 / 50000) * 100,
+        comparedToLastMonthInMoney: 52000 - 50000,
       };
     } catch (error) {
       console.log('Error while fetching Months total Income');
@@ -409,10 +416,10 @@ export class MoneyService {
   async getMonthsTotalExpense(user: User) {
     try {
       return {
-        total: 0,
-        lastMonthExpense: 0,
-        comparedToLastMonthInMoney: 0,
-        comparedToLastMonthInPercent: 0,
+        total: 15000,
+        lastMonthExpense: 12000,
+        comparedToLastMonthInPercent: (12000 / 15000 / 15000) * 100,
+        comparedToLastMonthInMoney: 12000 - 15000,
       };
     } catch (error) {
       console.log('Error while fetching Months total Expense');
