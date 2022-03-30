@@ -18,9 +18,15 @@ import { paginate } from 'nestjs-typeorm-paginate';
 export class MoneyService {
   async getDashboard(user: User, dashboardQuery: DashboardQueryDto) {
     try {
+      const availableBalance = this.getAvailableBalance(user);
+      const dailyLimit = this.getDailyLimit(user);
+      const monthsTotalIncome = this.getMonthsTotalIncome(user);
+      const monthsTotalExpense = this.getMonthsTotalExpense(user);
       return {
-        user,
-        dashboardQuery,
+        availableBalance,
+        dailyLimit,
+        monthsTotalIncome,
+        monthsTotalExpense,
       };
     } catch (error) {
       console.log('Error during fetching dashboard data ', error);
@@ -363,6 +369,53 @@ export class MoneyService {
     } catch (error) {
       console.log('Error during deleting user goal ', error);
       throw new BadRequestException('Error during deleting user goal');
+    }
+  }
+
+  async getAvailableBalance(user: User) {
+    try {
+      return {
+        total: 0,
+        percentageUsed: 0,
+      };
+    } catch (error) {
+      console.log('Error while fetching Available Balance');
+    }
+  }
+  async getDailyLimit(user: User) {
+    try {
+      return {
+        total: 0,
+        spentToday: 0,
+        remaingForTheeDay: 0,
+        percentageUsed: 0,
+      };
+    } catch (error) {
+      console.log('Error while fetching Daily Limit');
+    }
+  }
+  async getMonthsTotalIncome(user: User) {
+    try {
+      return {
+        total: 0,
+        lastMonthIncome: 0,
+        comparedToLastMonthInMoney: 0,
+        comparedToLastMonthInPercent: 0,
+      };
+    } catch (error) {
+      console.log('Error while fetching Months total Income');
+    }
+  }
+  async getMonthsTotalExpense(user: User) {
+    try {
+      return {
+        total: 0,
+        lastMonthExpense: 0,
+        comparedToLastMonthInMoney: 0,
+        comparedToLastMonthInPercent: 0,
+      };
+    } catch (error) {
+      console.log('Error while fetching Months total Expense');
     }
   }
 }
