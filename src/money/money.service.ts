@@ -27,19 +27,23 @@ export class MoneyService {
       throw new BadRequestException('Error during fetching dashboard data');
     }
   }
+
   async getCategories(user: User, categoryQuery: CategoryQueryDto) {
     try {
       const connection = getConnection('default');
       let query;
-      const { search } = categoryQuery;
+      const { search, type } = categoryQuery;
       query = connection
         .getRepository(Category)
         .createQueryBuilder('category')
         .where('category.userId = :userId', { userId: user.id });
       if (search && search.length > 0) {
-        query = query.andWhere('category.name LIKE :search', {
+        query.andWhere('category.name LIKE :search', {
           search: `%${search}%`,
         });
+      }
+      if (type) {
+        query.andWhere('category.type = :type', { type });
       }
       query.orderBy('category.name', 'ASC');
       return await query.getMany();
@@ -48,6 +52,7 @@ export class MoneyService {
       throw new BadRequestException('Error during fetching categories');
     }
   }
+
   async addCategory(user: User, addCategoryDto: AddCategoryDto) {
     try {
       const connection = getConnection('default');
@@ -63,9 +68,14 @@ export class MoneyService {
       };
     } catch (error) {
       console.log('Error during adding category ', error);
-      throw new BadRequestException('Error during adding category');
+      throw new BadRequestException(
+        error.code === 'ER_DUP_ENTRY'
+          ? 'Category already exists'
+          : 'Error during adding category'
+      );
     }
   }
+
   async updateCategory(
     user: User,
     categoryId: number,
@@ -89,9 +99,14 @@ export class MoneyService {
       };
     } catch (error) {
       console.log('Error during updating category ', error);
-      throw new BadRequestException('Error during updating category');
+      throw new BadRequestException(
+        error.code === 'ER_DUP_ENTRY'
+          ? 'Category already exists'
+          : 'Error during updating category'
+      );
     }
   }
+
   async deleteCategory(user: User, categoryId: number) {
     try {
       const connection = getConnection('default');
@@ -111,6 +126,7 @@ export class MoneyService {
       throw new BadRequestException('Error during deleting category');
     }
   }
+
   async getTransactions(user: User, transactionQuery: TransactionQueryDto) {
     try {
       const connection = getConnection('default');
@@ -146,6 +162,7 @@ export class MoneyService {
       throw new BadRequestException('Error during fetching transactions data');
     }
   }
+
   async addTransaction(user: User, addTransactionDto: AddTransactionDto) {
     try {
       const connection = getConnection('default');
@@ -172,9 +189,14 @@ export class MoneyService {
       };
     } catch (error) {
       console.log('Error during adding transaction ', error);
-      throw new BadRequestException('Error during adding transaction');
+      throw new BadRequestException(
+        error.code === 'ER_DUP_ENTRY'
+          ? 'Transaction already exists'
+          : 'Error during adding transaction'
+      );
     }
   }
+
   async updateTransaction(
     user: User,
     transactionId: number,
@@ -211,9 +233,14 @@ export class MoneyService {
       };
     } catch (error) {
       console.log('Error during updating transaction ', error);
-      throw new BadRequestException('Error during updating transaction');
+      throw new BadRequestException(
+        error.code === 'ER_DUP_ENTRY'
+          ? 'Transaction already exists'
+          : 'Error during updating transaction'
+      );
     }
   }
+
   async deleteTransaction(user: User, transactionId: number) {
     try {
       const connection = getConnection('default');
@@ -235,6 +262,7 @@ export class MoneyService {
       throw new BadRequestException('Error during deleting transaction');
     }
   }
+
   async getUserGoals(user: User, userGoalsQuery: UserGoalsQueryDto) {
     try {
       const connection = getConnection('default');
@@ -260,6 +288,7 @@ export class MoneyService {
       throw new BadRequestException('Error during fetching user goals');
     }
   }
+
   async addUserGoal(user: User, addUserGoalDto: AddUserGoalDto) {
     try {
       const connection = getConnection('default');
@@ -276,9 +305,14 @@ export class MoneyService {
       };
     } catch (error) {
       console.log('Error during adding user goal ', error);
-      throw new BadRequestException('Error during adding user goal');
+      throw new BadRequestException(
+        error.code === 'ER_DUP_ENTRY'
+          ? 'User Goal already exists'
+          : 'Error during adding user goal'
+      );
     }
   }
+
   async updateUserGoal(
     user: User,
     userGoalId: number,
@@ -304,9 +338,14 @@ export class MoneyService {
       };
     } catch (error) {
       console.log('Error during updating user goal ', error);
-      throw new BadRequestException('Error during updating user goal');
+      throw new BadRequestException(
+        error.code === 'ER_DUP_ENTRY'
+          ? 'User Goal already exists'
+          : 'Error during updating user goal'
+      );
     }
   }
+
   async deleteUserGoal(user: User, userGoalId: number) {
     try {
       const connection = getConnection('default');
