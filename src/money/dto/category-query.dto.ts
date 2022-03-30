@@ -6,12 +6,6 @@ export class CategoryQueryDto {
   @IsOptional()
   search?: string;
 
-  @IsOptional()
-  page?: number;
-
-  @IsOptional()
-  pageSize?: number;
-
   @IsNotEmpty()
   @IsEnum(CategoryEnum)
   type: CategoryEnum;

@@ -32,9 +32,6 @@ export class MoneyService {
       const connection = getConnection('default');
       let query;
       const { search } = categoryQuery;
-      let { page, pageSize } = categoryQuery;
-      page = page || 1;
-      pageSize = pageSize || 10;
       query = connection
         .getRepository(Category)
         .createQueryBuilder('category')
@@ -45,10 +42,7 @@ export class MoneyService {
         });
       }
       query.orderBy('category.name', 'ASC');
-      return await paginate<Category>(query, {
-        page,
-        limit: pageSize,
-      });
+      return await query.getMany();
     } catch (error) {
       console.log('Error during fetching categories ', error);
       throw new BadRequestException('Error during fetching categories');
