@@ -43,12 +43,10 @@ export class AuthService {
         };
         if (pass) {
           const token = this.jwtService.sign(payload);
-          const categories = await this.getUserCategories(user);
           return {
             token,
             type: 'success',
             message: 'Login Successful',
-            categories,
           };
         }
       }
@@ -114,14 +112,34 @@ export class AuthService {
     }
   }
 
-  async getUserCategories(user: User) {
+  async getProfile(user: User) {
     try {
       const connection = getConnection('default');
-      const categories = await connection.getRepository(Category).find();
-      return { categories, user };
+      const categoryQuery = await connection
+        .getRepository(Category)
+        .createQueryBuilder('income')
+        .where('income.userId = :userId', { userId: user.id });
+
+      const incomeCategories = await categoryQuery
+        .andWhere('income.type = :type', { type: 'income' })
+        .getMany();
+
+      const expenseCategories = await categoryQuery
+        .andWhere('income.type = :type', { type: 'expense' })
+        .getMany();
+      const userData = {
+        ...user,
+        password: null,
+        salt: null,
+      };
+      return {
+        user: userData,
+        incomeCategories,
+        expenseCategories,
+      };
     } catch (error) {
-      console.log('Error during get user categories', error);
-      throw new BadRequestException('Error during get user categories');
+      console.log('Error during get user Profile', error);
+      throw new BadRequestException('Error during get user Profile');
     }
   }
 }
