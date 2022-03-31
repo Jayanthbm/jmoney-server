@@ -37,6 +37,9 @@ export class User {
   @Column({ type: 'text', nullable: true })
   image: string;
 
+  @Column({ nullable: true, default: 'INR' })
+  currency: string;
+
   @CreateDateColumn({ select: false })
   createdAt: Date;
 
