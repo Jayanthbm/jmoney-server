@@ -20,6 +20,6 @@ async function bootstrap() {
   });
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new ErrorFilter());
-  await app.listen(process.env.PORT || '80');
+  await app.listen(3001);
 }
 bootstrap();
