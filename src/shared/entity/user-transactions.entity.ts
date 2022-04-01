@@ -18,16 +18,16 @@ export class UserTransactions {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', nullable: true })
   name: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   description: string;
 
   @Column({ type: 'double' })
   amount: number;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'timestamp' })
   date: string;
 
   @Column({ type: 'set', enum: CategoryEnum })

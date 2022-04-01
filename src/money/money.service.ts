@@ -87,7 +87,7 @@ export class MoneyService {
       throw new BadRequestException(
         error.code === 'ER_DUP_ENTRY'
           ? 'Category already exists'
-          : 'Error during adding category'
+          : 'Error during adding category',
       );
     }
   }
@@ -95,7 +95,7 @@ export class MoneyService {
   async updateCategory(
     user: User,
     categoryId: number,
-    addCategoryDto: AddCategoryDto
+    addCategoryDto: AddCategoryDto,
   ) {
     try {
       const connection = getConnection('default');
@@ -118,7 +118,7 @@ export class MoneyService {
       throw new BadRequestException(
         error.code === 'ER_DUP_ENTRY'
           ? 'Category already exists'
-          : 'Error during updating category'
+          : 'Error during updating category',
       );
     }
   }
@@ -197,7 +197,7 @@ export class MoneyService {
           transaction.category = category;
         }
       }
-      // transaction.user = user;
+      transaction.user = user;
       await connection.manager.save(transaction);
       return {
         type: 'success',
@@ -208,7 +208,7 @@ export class MoneyService {
       throw new BadRequestException(
         error.code === 'ER_DUP_ENTRY'
           ? 'Transaction already exists'
-          : 'Error during adding transaction'
+          : 'Error during adding transaction',
       );
     }
   }
@@ -216,7 +216,7 @@ export class MoneyService {
   async updateTransaction(
     user: User,
     transactionId: number,
-    addTransactionDto: AddTransactionDto
+    addTransactionDto: AddTransactionDto,
   ) {
     try {
       const connection = getConnection('default');
@@ -252,7 +252,7 @@ export class MoneyService {
       throw new BadRequestException(
         error.code === 'ER_DUP_ENTRY'
           ? 'Transaction already exists'
-          : 'Error during updating transaction'
+          : 'Error during updating transaction',
       );
     }
   }
@@ -324,7 +324,7 @@ export class MoneyService {
       throw new BadRequestException(
         error.code === 'ER_DUP_ENTRY'
           ? 'User Goal already exists'
-          : 'Error during adding user goal'
+          : 'Error during adding user goal',
       );
     }
   }
@@ -332,7 +332,7 @@ export class MoneyService {
   async updateUserGoal(
     user: User,
     userGoalId: number,
-    addUserGoalDto: AddUserGoalDto
+    addUserGoalDto: AddUserGoalDto,
   ) {
     try {
       const connection = getConnection('default');
@@ -357,7 +357,7 @@ export class MoneyService {
       throw new BadRequestException(
         error.code === 'ER_DUP_ENTRY'
           ? 'User Goal already exists'
-          : 'Error during updating user goal'
+          : 'Error during updating user goal',
       );
     }
   }
@@ -386,7 +386,7 @@ export class MoneyService {
     type: CategoryEnum,
     user: User,
     month: number,
-    year: number
+    year: number,
   ) {
     try {
       const connection = getConnection('default');

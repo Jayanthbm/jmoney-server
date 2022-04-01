@@ -10,10 +10,10 @@ import {
 import { CategoryEnum } from 'src/shared/enum/enums';
 
 export class AddTransactionDto {
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @MaxLength(15)
-  name: string;
+  name?: string;
 
   @IsOptional()
   @IsString()
