@@ -11,6 +11,7 @@ import { User } from 'src/shared/entity/user.entity';
 import { UserGoals } from './../shared/entity/user-goals.entity';
 import { UserGoalsQueryDto } from './dto/user-goals-query.dto';
 import { UserTransactions } from './../shared/entity/user-transactions.entity';
+import { CategoryEnum } from './../shared/enum/enums';
 import { getConnection } from 'typeorm';
 import { paginate } from 'nestjs-typeorm-paginate';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
