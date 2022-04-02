@@ -9,10 +9,6 @@ export class AddUserGoalDto {
 
   @IsOptional()
   @IsString()
-  icon?: string;
-
-  @IsOptional()
-  @IsString()
   description?: string;
 
   @IsNotEmpty()

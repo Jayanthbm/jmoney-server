@@ -14,8 +14,14 @@ import { UserTransactions } from './../shared/entity/user-transactions.entity';
 import { CategoryEnum } from './../shared/enum/enums';
 import { getConnection } from 'typeorm';
 import { paginate } from 'nestjs-typeorm-paginate';
+// import { faker } from '@faker-js/faker';
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const moment = require('moment');
+// function randomIntFromInterval(min, max) {
+//   // min and max included
+//   return Math.floor(Math.random() * (max - min + 1) + min);
+// }
 @Injectable()
 export class MoneyService {
   async getDashboard(user: User, dashboardQuery: DashboardQueryDto) {
@@ -283,9 +289,6 @@ export class MoneyService {
     try {
       const connection = getConnection('default');
       const { search } = userGoalsQuery;
-      let { page, pageSize } = userGoalsQuery;
-      page = page || 1;
-      pageSize = pageSize || 40;
       const userGoals = connection
         .getRepository(UserGoals)
         .createQueryBuilder('userGoal')
@@ -294,11 +297,9 @@ export class MoneyService {
         userGoals.andWhere('userGoal.name like :search', {
           search: `%${search}%`,
         });
-        return await paginate<UserGoals>(userGoals, {
-          page,
-          limit: pageSize,
-        });
       }
+      userGoals.orderBy('userGoal.id', 'DESC');
+      return await userGoals.getMany();
     } catch (error) {
       console.log('Error during fetching user goals ', error);
       throw new BadRequestException('Error during fetching user goals');
@@ -343,7 +344,6 @@ export class MoneyService {
         throw new BadRequestException('User goal not found');
       }
       userGoal.name = addUserGoalDto.name;
-      userGoal.icon = addUserGoalDto.icon;
       userGoal.description = addUserGoalDto.description;
       userGoal.totalAmount = addUserGoalDto.totalAmount;
       userGoal.savedAmount = addUserGoalDto.savedAmount;

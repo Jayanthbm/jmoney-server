@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
   Req,
   UseGuards,
@@ -105,7 +106,7 @@ export class MoneyController {
     return this.moneyService.addUserGoal(req.user, addUserGoalDto);
   }
 
-  @Patch('/updateUserGoal/:userGoalId')
+  @Put('/updateUserGoal/:userGoalId')
   async updateUserGoal(
     @Req() req,
     @Param('userGoalId') userGoalId: number,

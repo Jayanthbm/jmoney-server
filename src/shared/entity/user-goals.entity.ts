@@ -1,5 +1,4 @@
 import {
-  AfterInsert,
   Column,
   CreateDateColumn,
   Entity,
@@ -7,6 +6,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   Index,
+  BeforeInsert,
+  BeforeUpdate,
 } from 'typeorm';
 
 import { User } from './user.entity';
@@ -20,10 +21,7 @@ export class UserGoals {
   @Column({ type: 'varchar' })
   name: string;
 
-  @Column({ type: 'varchar' })
-  icon: string;
-
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', nullable: true })
   description: string;
 
   @Column({ type: 'double' })
@@ -32,10 +30,10 @@ export class UserGoals {
   @Column({ type: 'double' })
   savedAmount: number;
 
-  @Column({ type: 'double' })
+  @Column({ type: 'double', nullable: true, default: 0 })
   pendingAmount: number;
 
-  @Column({ type: 'double' })
+  @Column({ type: 'double', nullable: true, default: 0 })
   percentageCompleted: number;
 
   @CreateDateColumn({ select: false })
@@ -44,10 +42,20 @@ export class UserGoals {
   @UpdateDateColumn({ select: false })
   updatedAt: Date;
 
-  @AfterInsert()
+  @BeforeInsert()
   updateAmount() {
     this.pendingAmount = this.totalAmount - this.savedAmount;
-    this.percentageCompleted = (this.savedAmount / this.totalAmount) * 100;
+    this.percentageCompleted = parseFloat(
+      ((this.savedAmount / this.totalAmount) * 100).toFixed(2),
+    );
+  }
+
+  @BeforeUpdate()
+  updateAmountAfterUpdate() {
+    this.pendingAmount = this.totalAmount - this.savedAmount;
+    this.percentageCompleted = parseFloat(
+      ((this.savedAmount / this.totalAmount) * 100).toFixed(2),
+    );
   }
 
   @ManyToOne(() => User, (user) => user.goals, {
