@@ -21,9 +21,6 @@ export class Category {
   @Column({ type: 'varchar' })
   name: string;
 
-  @Column({ type: 'varchar', nullable: true, default: null, select: false })
-  icon: string;
-
   @Column({ type: 'set', enum: CategoryEnum })
   type: CategoryEnum;
 

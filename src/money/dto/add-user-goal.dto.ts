@@ -7,10 +7,6 @@ export class AddUserGoalDto {
   @IsString()
   name: string;
 
-  @IsOptional()
-  @IsString()
-  description?: string;
-
   @IsNotEmpty()
   @IsNumber()
   totalAmount: number;

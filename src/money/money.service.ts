@@ -67,8 +67,26 @@ export class MoneyService {
       if (type) {
         query.andWhere('category.type = :type', { type });
       }
+      let incomeCategories, expenseCategories;
+      if (!type) {
+        const incomeQuery = query.clone();
+
+        incomeQuery.andWhere('category.type = :type', {
+          type: CategoryEnum.income,
+        });
+        incomeCategories = await incomeQuery.getMany();
+        const expenseQuery = query.clone();
+        expenseQuery.andWhere('category.type = :type', {
+          type: CategoryEnum.expense,
+        });
+        expenseCategories = await expenseQuery.getMany();
+      }
       query.orderBy('category.name', 'ASC');
-      return await query.getMany();
+      return {
+        incomeCategories,
+        expenseCategories,
+        categories: await query.getMany(),
+      };
     } catch (error) {
       console.log('Error during fetching categories ', error);
       throw new BadRequestException('Error during fetching categories');
@@ -80,7 +98,6 @@ export class MoneyService {
       const connection = getConnection('default');
       const category = new Category();
       category.name = addCategoryDto.name;
-      category.icon = addCategoryDto.icon;
       category.type = addCategoryDto.type;
       category.user = user;
       await connection.manager.save(category);
@@ -112,7 +129,6 @@ export class MoneyService {
         throw new BadRequestException('Category not found');
       }
       category.name = addCategoryDto.name;
-      category.icon = addCategoryDto.icon;
       category.type = addCategoryDto.type;
       await connection.manager.save(category);
       return {
@@ -155,10 +171,11 @@ export class MoneyService {
       const { search } = transactionQuery;
       let { page, pageSize } = transactionQuery;
       page = page || 1;
-      pageSize = pageSize || 10;
+      pageSize = pageSize || 20;
       const query = connection
         .getRepository(UserTransactions)
         .createQueryBuilder('transaction')
+        .leftJoinAndSelect('transaction.category', 'category')
         .where('transaction.userId = :userId', { userId: user.id });
       if (search && search.length > 0) {
         query.andWhere('transaction.description LIKE :search', {
@@ -175,6 +192,30 @@ export class MoneyService {
           categoryId: transactionQuery.categoryId,
         });
       }
+      if (transactionQuery.startDate && transactionQuery.endDate) {
+        query.andWhere('transaction.date BETWEEN :startDate AND :endDate', {
+          startDate: transactionQuery.startDate,
+          endDate: transactionQuery.endDate,
+        });
+      }
+      if (transactionQuery.month) {
+        let year = transactionQuery.year;
+        if (!year) {
+          year = moment().format('YYYY');
+        }
+        query
+          .andWhere('month(transaction.date) = :month', {
+            month: transactionQuery.month,
+          })
+          .andWhere('YEAR(transaction.date) = :year', {
+            year: year,
+          });
+      }
+      if (transactionQuery.year) {
+        query.andWhere('YEAR(transaction.date) = :year', {
+          year: transactionQuery.year,
+        });
+      }
       return await paginate<UserTransactions>(query, {
         page,
         limit: pageSize,
@@ -189,7 +230,6 @@ export class MoneyService {
     try {
       const connection = getConnection('default');
       const transaction = new UserTransactions();
-      transaction.name = addTransactionDto.name;
       transaction.description = addTransactionDto.description;
       transaction.amount = addTransactionDto.amount;
       if (addTransactionDto.type) {
@@ -234,7 +274,6 @@ export class MoneyService {
       if (!transaction) {
         throw new BadRequestException('Transaction not found');
       }
-      transaction.name = addTransactionDto.name;
       transaction.description = addTransactionDto.description;
       transaction.amount = addTransactionDto.amount;
       if (addTransactionDto.type) {
@@ -311,7 +350,6 @@ export class MoneyService {
       const connection = getConnection('default');
       const userGoal = new UserGoals();
       userGoal.name = addUserGoalDto.name;
-      userGoal.description = addUserGoalDto.description;
       userGoal.totalAmount = addUserGoalDto.totalAmount;
       userGoal.savedAmount = addUserGoalDto.savedAmount;
       userGoal.user = user;
@@ -344,7 +382,6 @@ export class MoneyService {
         throw new BadRequestException('User goal not found');
       }
       userGoal.name = addUserGoalDto.name;
-      userGoal.description = addUserGoalDto.description;
       userGoal.totalAmount = addUserGoalDto.totalAmount;
       userGoal.savedAmount = addUserGoalDto.savedAmount;
       await connection.manager.save(userGoal);

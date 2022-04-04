@@ -4,21 +4,11 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  MaxLength,
 } from 'class-validator';
 
 import { CategoryEnum } from 'src/shared/enum/enums';
 
 export class AddTransactionDto {
-  @IsOptional()
-  @IsString()
-  @MaxLength(15)
-  name?: string;
-
-  @IsOptional()
-  @IsString()
-  description?: string;
-
   @IsNotEmpty()
   @IsNumber()
   amount: number;
@@ -26,6 +16,10 @@ export class AddTransactionDto {
   @IsNotEmpty()
   @IsString()
   date: string;
+
+  @IsOptional()
+  @IsString()
+  description?: string;
 
   @IsOptional()
   @IsEnum(CategoryEnum)

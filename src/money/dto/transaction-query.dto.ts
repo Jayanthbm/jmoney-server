@@ -1,4 +1,4 @@
-import { IsEnum, IsNumber, IsOptional } from 'class-validator';
+import { IsEnum, IsOptional } from 'class-validator';
 
 import { CategoryEnum } from 'src/shared/enum/enums';
 
@@ -17,6 +17,17 @@ export class TransactionQueryDto {
   type?: CategoryEnum;
 
   @IsOptional()
-  @IsNumber()
-  categoryId?: number;
+  categoryId?: string;
+
+  @IsOptional()
+  startDate?: string;
+
+  @IsOptional()
+  endDate?: string;
+
+  @IsOptional()
+  year?: string;
+
+  @IsOptional()
+  month?: string;
 }

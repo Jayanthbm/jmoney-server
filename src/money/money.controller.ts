@@ -75,7 +75,7 @@ export class MoneyController {
     return this.moneyService.addTransaction(req.user, addTransactionDto);
   }
 
-  @Patch('/updateTransaction/:transactionId')
+  @Put('/updateTransaction/:transactionId')
   async updateTransaction(
     @Req() req,
     @Param('transactionId') transactionId: number,

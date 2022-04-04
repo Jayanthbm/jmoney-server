@@ -20,8 +20,4 @@ export class AddCategoryDto {
   @IsNotEmpty()
   @IsEnum(CategoryEnum)
   type: CategoryEnum;
-
-  @IsOptional()
-  @IsString()
-  icon?: string;
 }

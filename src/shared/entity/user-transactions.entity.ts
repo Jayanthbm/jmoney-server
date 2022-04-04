@@ -13,13 +13,10 @@ import { CategoryEnum } from '../enum/enums';
 import { User } from './user.entity';
 
 @Entity()
-@Index(['name', 'amount', 'date', 'type', 'user'], { unique: true })
+@Index(['amount', 'date', 'type', 'user', 'category'], { unique: true })
 export class UserTransactions {
   @PrimaryGeneratedColumn()
   id: number;
-
-  @Column({ type: 'varchar', nullable: true })
-  name: string;
 
   @Column({ type: 'text', nullable: true })
   description: string;

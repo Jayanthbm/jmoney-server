@@ -21,9 +21,6 @@ export class UserGoals {
   @Column({ type: 'varchar' })
   name: string;
 
-  @Column({ type: 'varchar', nullable: true })
-  description: string;
-
   @Column({ type: 'double' })
   totalAmount: number;
 
